@@ -12,7 +12,7 @@ import (
 func NewLLM(provider string) (llms.Model, error) {
 	switch provider {
 	case "ollama":
-		return ollama.New(ollama.WithModel("gemma3:270m"))
+		return ollama.New(ollama.WithModel("qwen3:8b"))
 
 	case "openai":
 		return openai.New(openai.WithToken("OPENAI_API_KEY"))

@@ -1,32 +1,38 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	"log"
 	"os"
 
+	"github.com/ShreyasNarvekar/langChain/internal/agent"
 	"github.com/ShreyasNarvekar/langChain/internal/llm"
 	_ "github.com/joho/godotenv/autoload"
-	"github.com/tmc/langchaingo/llms"
 )
 
 func main() {
-	information := "Elon Musk"
+	// information := "Elon Musk"
 
-	summaryTemplate := "give me some information about:" + information + "\n Summary:\n1. 2 interesting facts\n2. latest project about him/her"
+	// summaryTemplate := "give me some information about:" + information + "\n Summary:\n1. 2 interesting facts\n2. latest project about him/her"
 
 	//Getting the instance of ollama llm with respective model
+	fmt.Println("provider:::", os.Getenv("provider"))
 	llm, err := llm.NewLLM(os.Getenv("provider"))
 	if err != nil {
-		log.Fatal("Failed to initialize Ollama: %v", err)
+		log.Fatalf("Failed to initialize Ollama: %v", err)
 	}
+	fmt.Println("2")
+	executor := agent.GetNewAgent(llm)
+	fmt.Println("3")
 
-	resp, err := llms.GenerateFromSinglePrompt(context.Background(), llm, summaryTemplate)
+	resp, err := agent.RunAgent(executor, "London")
+	fmt.Println("4")
+
+	// resp, err := llms.GenerateFromSinglePrompt(context.Background(), llm, summaryTemplate)
 	if err != nil {
-		log.Fatal("Failed to generate respone from prompt: %v", err)
+		log.Fatalf("Failed to generate respone from prompt: %v", err)
 	}
 
-	fmt.Println("Response:\n", resp)
+	fmt.Println("Response:\n", resp["output"])
 
 }
